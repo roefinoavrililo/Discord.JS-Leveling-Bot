@@ -14,7 +14,6 @@ module.exports = {
         let userArgs = userArray.slice(1);
         let user = message.mentions.members.first() || message.guild.members.cache.get(userArgs[0]) || message.guild.members.cache.find(x => x.user.username.toLowerCase() === userArgs.slice(0).join(" ") || x.user.username === userArgs[0])
 
-        if (!message.guild.me.hasPermission("EMBED_LINK")) return message.channel.send(`**Missing Permission**: EMBED_LINK`)
         if(!message.member.hasPermission("MANAGE_GUILD")) return message.reply(`You do not have permission to use this command!`);
 
         const levelArgs = parseInt(args[1])

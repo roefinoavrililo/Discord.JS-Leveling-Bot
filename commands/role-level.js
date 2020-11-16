@@ -14,7 +14,6 @@ module.exports = {
     async execute (message, args) {
         if(!message.guild.me.hasPermission("MANAGE_ROLES")) return message.reply(`I do not have permission to manage roles!`);
         if(!message.member.hasPermission("MANAGE_ROLES") || !message.member.hasPermission("MANAGE_GUILD")) return message.reply(`You do not have permission to use this command!`);
-        if (!message.guild.me.hasPermission("EMBED_LINK")) return message.channel.send(`**Missing Permission**: EMBED_LINK`)
 
 
         if(!args.length) {

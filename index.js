@@ -89,60 +89,59 @@ client.on("message", (message) => {
     console.error(error);
     message.reply("There was an error executing that command.").catch(console.error);
   }
-
-  // get level and set level
-  const level = client.getLevel.get(message.author.id, message.guild.id) 
-  if(!level) {
-    let insertLevel = sql.prepare("INSERT OR REPLACE INTO levels (id, user, guild, xp, level, totalXP) VALUES (?,?,?,?,?,?);");
-    insertLevel.run(`${message.author.id}-${message.guild.id}`, message.author.id, message.guild.id, 0, 0, 0)
-    return;
-  }
-
-  const lvl = level.level;
-// xp system
-  const generatedXp = Math.floor(Math.random() * 16);
-  const nextXP = level.level * 2 * 250 + 250
-  // message content or characters length has to be more than 4 characters
-  if(message.content.length > 4) {
-      level.xp += generatedXp;
-      level.totalXP += generatedXp;
-      }
-
-// level up!
-  if(level.xp >= nextXP) {
-          level.xp = 0;
-          level.level += 1;
-  let embed = new MessageEmbed()
-        .setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-        .setDescription(`**Congratulations** ${message.author}! You have now leveled up to **level ${score.level}**`)
-        .setColor("RANDOM")
-        .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
-        .setTimestamp();
-  if (!message.guild.me.hasPermission("SEND_MESSAGES") || !message.guild.me.hasPermission("EMBED_LINKS")) {
-      return message.author.send(embed);
-  }
-  message.channel.send(embed);
-  };
-client.setLevel.run(level); 
-
-// level up, time to add level roles
-const member = message.member;
-let Roles = sql.prepare("SELECT * FROM roles WHERE guildID = ? AND level = ?")
-
-let roles = Roles.get(message.guild.id, lvl)
-if(!roles) return;
-if(lvl >= roles.level) {
-if(roles) {
-if (member.roles.cache.get(roles.roleID)) {
-  return;
- } else {
-   if(!message.guild.me.hasPermission("MANAGE_ROLES")) {
-     return ownerID.send(`I do not have permission to manage roles in ${message.guild.name}`).catch((err) => {
-       message.channel.send(`I do not have permission to manage roles! Please contact the owner of the server to fix this!`);
-     })
-   }
- member.roles.add(roles.roleID);
-}}
-};
-
 });
+
+// XP Messages 
+client.on("message", message => {
+        // get level and set level
+        const level = client.getLevel.get(message.author.id, message.guild.id) 
+        if(!level) {
+          let insertLevel = sql.prepare("INSERT OR REPLACE INTO levels (id, user, guild, xp, level, totalXP) VALUES (?,?,?,?,?,?);");
+          insertLevel.run(`${message.author.id}-${message.guild.id}`, message.author.id, message.guild.id, 0, 0, 0)
+          return;
+        }
+      
+        const lvl = level.level;
+      // xp system
+        const generatedXp = Math.floor(Math.random() * 16);
+        const nextXP = level.level * 2 * 250 + 250
+        // message content or characters length has to be more than 4 characters
+        if(message.content.length > 4) {
+            level.xp += generatedXp;
+            level.totalXP += generatedXp;
+            }
+      
+      // level up!
+        if(level.xp >= nextXP) {
+                level.xp = 0;
+                level.level += 1;
+        let embed = new Discord.MessageEmbed()
+              .setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
+              .setDescription(`**Congratulations** ${message.author}! You have now leveled up to **level ${level.level}**`)
+              .setColor("RANDOM")
+              .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
+              .setTimestamp();
+        if (!message.guild.me.hasPermission("SEND_MESSAGES") || !message.guild.me.hasPermission("EMBED_LINKS")) {
+            return message.author.send(embed);
+        }
+        message.channel.send(embed);
+        };
+      client.setLevel.run(level); 
+      
+      // level up, time to add level roles
+      const member = message.member;
+      let Roles = sql.prepare("SELECT * FROM roles WHERE guildID = ? AND level = ?")
+      
+      let roles = Roles.get(message.guild.id, lvl)
+      if(!roles) return;
+      if(lvl >= roles.level) {
+      if(roles) {
+      if (member.roles.cache.get(roles.roleID)) {
+        return;
+      }
+         if(!message.guild.me.hasPermission("MANAGE_ROLES")) {
+           return
+         }
+       member.roles.add(roles.roleID);
+      }}
+})
