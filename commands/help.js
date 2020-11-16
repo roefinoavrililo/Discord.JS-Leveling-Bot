@@ -2,7 +2,6 @@ const { MessageEmbed } = require("discord.js");
 const config = require("../config.json");
 const client = require("discord.js");
 const Discord = require("discord.js");
-const database = require("quick.db");
 
 module.exports = {
   name: "help",
@@ -11,9 +10,7 @@ module.exports = {
   cooldown : 3,
   description: "Display Help Commands",
   async execute(message, args) {
-    var customPrefix = new database.table(`prefix_${message.guild.id}`)
-    let prefix = await customPrefix.get(`prefix_${message.guild.id}`);
-    if(prefix === null) prefix = config.DEFAULT_PREFIX
+const prefix = config.prefix
     if (!message.guild.me.hasPermission("EMBED_LINKS")) return message.channel.send(`Missing Permission: EMBED_LINKS`)
 
     const { commands } = message.client;
