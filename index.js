@@ -10,6 +10,7 @@ const client = new Discord.Client()
 client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const talkedRecently = new Set();
 
 // Token, Prefix, and Owner ID
 const config = require("./config.json")
@@ -102,32 +103,7 @@ client.on("message", message => {
         }
       
         const lvl = level.level;
-      // xp system
-        const generatedXp = Math.floor(Math.random() * 16);
-        const nextXP = level.level * 2 * 250 + 250
-        // message content or characters length has to be more than 4 characters
-        if(message.content.length > 4) {
-            level.xp += generatedXp;
-            level.totalXP += generatedXp;
-            }
-      
-      // level up!
-        if(level.xp >= nextXP) {
-                level.xp = 0;
-                level.level += 1;
-        let embed = new Discord.MessageEmbed()
-              .setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-              .setDescription(`**Congratulations** ${message.author}! You have now leveled up to **level ${level.level}**`)
-              .setColor("RANDOM")
-              .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
-              .setTimestamp();
-        if (!message.guild.me.hasPermission("SEND_MESSAGES") || !message.guild.me.hasPermission("EMBED_LINKS")) {
-            return message.author.send(embed);
-        }
-        message.channel.send(embed);
-        };
-      client.setLevel.run(level); 
-      
+
       // level up, time to add level roles
       const member = message.member;
       let Roles = sql.prepare("SELECT * FROM roles WHERE guildID = ? AND level = ?")
@@ -144,4 +120,41 @@ client.on("message", message => {
          }
        member.roles.add(roles.roleID);
       }}
+
+      // xp system
+        const generatedXp = Math.floor(Math.random() * 16);
+        const nextXP = level.level * 2 * 250 + 250
+        // message content or characters length has to be more than 4 characters also cooldown
+      if(talkedRecently.has(message.author.id)) {
+        return;
+      } else { // cooldown is 5 seconds
+        if(message.content.length > 4) {
+            level.xp += generatedXp;
+            level.totalXP += generatedXp;
+            }
+
+      // level up!
+        if(level.xp >= nextXP) {
+                level.xp = 0;
+                level.level += 1;
+        let embed = new Discord.MessageEmbed()
+              .setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
+              .setDescription(`**Congratulations** ${message.author}! You have now leveled up to **level ${level.level}**`)
+              .setColor("RANDOM")
+              .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
+              .setTimestamp();
+        // using try catch if bot have perms to send EMBED_LINKS      
+        try {
+        message.channel.send(embed);
+        } catch (err) {
+          message.channel.send(`Congratulations, ${message.author}! You have now leveled up to **Level ${level.level}**`)
+        }
+      };
+      client.setLevel.run(level);
+      // add cooldown to user
+  talkedRecently.add(message.author.id);
+  setTimeout(() => {
+    talkedRecently.delete(message.author.id)
+  }, 5000)    
+      }
 })
