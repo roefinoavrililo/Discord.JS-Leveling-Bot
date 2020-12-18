@@ -12,6 +12,9 @@
 3. Packages you need to install: Discord.JS, better-sqlite3, canvas, fs.
 4. DB Browser (SQLite) *optional
 
+## IMPORTANT NOTE
+You cannot host this bot on Heroku since Heroku cannot write files such as sqlite files. You can host your bot on Something.Host, Make sure you have join [This Server](https://discord.gg/hosting) for free hosting services.
+
 Make sure you turn these on! Go to: `https://discord.com/developers/applications/yourclientid/bot`
 ![logo](https://cdn.discordapp.com/attachments/740789315407183872/777849276150710282/unknown.png)
 
