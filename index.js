@@ -10,7 +10,7 @@ const client = new Discord.Client()
 client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const talkedRecently = new Set();
+const talkedRecently = new Map();
 
 // Token, Prefix, and Owner ID
 const config = require("./config.json")
@@ -104,34 +104,16 @@ client.on("message", message => {
       
         const lvl = level.level;
 
-      // level up, time to add level roles
-      const member = message.member;
-      let Roles = sql.prepare("SELECT * FROM roles WHERE guildID = ? AND level = ?")
-      
-      let roles = Roles.get(message.guild.id, lvl)
-      if(!roles) return;
-      if(lvl >= roles.level) {
-      if(roles) {
-      if (member.roles.cache.get(roles.roleID)) {
-        return;
-      }
-         if(!message.guild.me.hasPermission("MANAGE_ROLES")) {
-           return
-         }
-       member.roles.add(roles.roleID);
-      }}
-
       // xp system
         const generatedXp = Math.floor(Math.random() * 16);
         const nextXP = level.level * 2 * 250 + 250
         // message content or characters length has to be more than 4 characters also cooldown
-      if(talkedRecently.has(message.author.id)) {
+      if(talkedRecently.get(message.author.id)) {
         return;
-      } else { // cooldown is 5 seconds
-        if(message.content.length > 4) {
+      } else { // cooldown is 10 seconds
             level.xp += generatedXp;
             level.totalXP += generatedXp;
-            }
+            
 
       // level up!
         if(level.xp >= nextXP) {
@@ -152,9 +134,23 @@ client.on("message", message => {
       };
       client.setLevel.run(level);
       // add cooldown to user
-  talkedRecently.add(message.author.id);
-  setTimeout(() => {
-    talkedRecently.delete(message.author.id)
-  }, 5000)    
+  talkedRecently.set(message.author.id, Date.now() + 10 * 1000);
+  setTimeout(() => talkedRecently.delete(message.author.id, Date.now() + 10 * 1000))    
       }
+            // level up, time to add level roles
+            const member = message.member;
+            let Roles = sql.prepare("SELECT * FROM roles WHERE guildID = ? AND level = ?")
+            
+            let roles = Roles.get(message.guild.id, lvl)
+            if(!roles) return;
+            if(lvl >= roles.level) {
+            if(roles) {
+            if (member.roles.cache.get(roles.roleID)) {
+              return;
+            }
+               if(!message.guild.me.hasPermission("MANAGE_ROLES")) {
+                 return
+               }
+             member.roles.add(roles.roleID);
+            }}
 })
