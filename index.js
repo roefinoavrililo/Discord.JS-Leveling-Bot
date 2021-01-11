@@ -94,6 +94,8 @@ client.on("message", (message) => {
 
 // XP Messages 
 client.on("message", message => {
+  if (message.author.bot) return;
+  if (!message.guild) return;
         // get level and set level
         const level = client.getLevel.get(message.author.id, message.guild.id) 
         if(!level) {
