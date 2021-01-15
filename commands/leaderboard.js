@@ -51,7 +51,7 @@ module.exports = {
       function buildTable() {
         var pagesData = pagination(state.querySet, state.page, state.rows)
         var myList = pagesData.querySet
-      for(let i = 1 in myList) {
+      for(var i = 1 in myList) {
            let nextXP = myList[i].level * 2 * 250 + 250
            let totalXP = myList[i].totalXP
           let rank = top10.sort((a, b) => {
