@@ -12,7 +12,7 @@ module.exports = {
     execute (message, args) {
       
     const currentPage = parseInt(args[0]) || 1;
-    const top10 = sql.prepare("SELECT * FROM levels WHERE guild = ? ORDER BY totalXP DESC LIMIT 10;").all(message.guild.id);
+    const top10 = sql.prepare("SELECT * FROM levels WHERE guild = ? ORDER BY totalXP DESC;").all(message.guild.id);
     if(parseFloat(args[0])  > Math.ceil(top10.length / 10)) {
       return message.reply(`Invalid page number! There are only ${Math.ceil(top10.length / 10)} pages`)
     }
