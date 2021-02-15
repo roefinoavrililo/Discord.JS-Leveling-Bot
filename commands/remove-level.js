@@ -4,10 +4,10 @@ const sql = new SQlite('./mainDB.sqlite');
 const client = new Discord.Client();
 
 module.exports = {
-    name: 'add-level',
-    aliases: ['give-level'],
+    name: 'remove-level',
+    aliases: ['removelevel'],
     category: "Leveling",
-    description: "Give or Add level to specified user",
+    description: "Remove or decrease level to specified user",
     cooldown: 3,
     async execute (message, args) {
         let userArray = message.content.split(" ");
@@ -37,13 +37,16 @@ module.exports = {
                         totalXP: 0
                     }
                 }
-                score.level += levelArgs
+                if(score.level - levelArgs < 1) {
+                    return message.reply(`You cannot remove levels from this user!`)
+                }    
+ 		score.level -= levelArgs
                 const newTotalXP = levelArgs - 1
                 let embed = new Discord.MessageEmbed()
                 .setTitle(`Success!`)
-                .setDescription(`Successfully added ${levelArgs} level to ${user.toString()}!`)
+                .setDescription(`Successfully remove ${levelArgs} level from ${user.toString()}!`)
                 .setColor("RANDOM");
-                score.totalXP += newTotalXP * 2 * 250 + 250
+                score.totalXP -= newTotalXP * 2 * 250 + 250
                 client.setScore.run(score)
                 return message.channel.send(embed)
             }

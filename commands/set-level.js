@@ -4,10 +4,10 @@ const sql = new SQlite('./mainDB.sqlite');
 const client = new Discord.Client();
 
 module.exports = {
-    name: 'add-level',
-    aliases: ['give-level'],
+    name: 'set-level',
+    aliases: ['levelset'],
     category: "Leveling",
-    description: "Give or Add level to specified user",
+    description: "Set user Level and XP",
     cooldown: 3,
     async execute (message, args) {
         let userArray = message.content.split(" ");
@@ -37,13 +37,14 @@ module.exports = {
                         totalXP: 0
                     }
                 }
-                score.level += levelArgs
+                score.level = levelArgs
                 const newTotalXP = levelArgs - 1
                 let embed = new Discord.MessageEmbed()
                 .setTitle(`Success!`)
-                .setDescription(`Successfully added ${levelArgs} level to ${user.toString()}!`)
+                .setDescription(`Successfully set ${levelArgs} level for ${user.toString()}!`)
                 .setColor("RANDOM");
-                score.totalXP += newTotalXP * 2 * 250 + 250
+                score.totalXP = newTotalXP * 2 * 250 + 250
+                score.xp = 0
                 client.setScore.run(score)
                 return message.channel.send(embed)
             }

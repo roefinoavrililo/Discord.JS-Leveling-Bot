@@ -55,20 +55,20 @@ const canvas = createCanvas(1000, 333)
     ctx.fill();
     ctx.globalAlpha = 1;
 
-    ctx.font = '30px Arial';
+    ctx.font = '30px sans-serif';
     ctx.textAlign = "center";
     ctx.fillStyle = "#beb1b1";
     ctx.fillText(`${xpInfo} / ${nextXP} XP`, 600, 260);
 
-    ctx.font = '35px Sans';
+   ctx.font = '35px sans-serif';
     ctx.textAlign = "left";
     ctx.fillText(user.user.tag, 325, 125);
 
-    ctx.font = '40px Sans';
+    ctx.font = '40px sans-serif';
     ctx.fillText("Level: ", 350, 170);
     ctx.fillText(levelInfo, 500, 170);
 
-    ctx.font = '40px Sans';
+    ctx.font = '40px sans-serif';
     ctx.fillText("Rank: ", 700, 170);
     ctx.fillText(ranking, 830, 170);
 
