@@ -56,6 +56,12 @@ You need to rename `config.json.example` file to `config.json` and after you don
 > Add Level
 * `-givelevel [userID or Mention] [level amount]`
 
+> Set Level
+* `-setlevel [userID or Mention] [level amount]`
+
+> Remove Level
+* `-removelevel [userID or Mention] [level amount]`
+
 > Role Level
 * Add role Level
 `-rlevel [ add ] [ level ] [ role ]`
