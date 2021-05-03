@@ -47,6 +47,9 @@ You need to rename `config.json.example` file to `config.json` and after you don
 > Help commands
 * `-help (command name)`
 
+> Set Prefix commands
+* `-setprefix [new prefix]`
+
 > Get user ranks
 * `-rank (userID or mention)`
 
@@ -69,6 +72,10 @@ You need to rename `config.json.example` file to `config.json` and after you don
 `-rlevel remove [ level ]`
 * Show role level
 `-rlevel show`
+
+## TO DO
+▶️ Voice Leveling
+▶️ Custom Rank Card
 
 ## Contributing
 

@@ -9,7 +9,6 @@ const client = new Discord.Client()
 
 client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
-const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const talkedRecently = new Map();
 
 // Token, Prefix, and Owner ID
@@ -33,6 +32,12 @@ client.on("ready", () => {
     sql.prepare("CREATE TABLE roles (guildID TEXT, roleID TEXT, level INTEGER);").run();
   }
 
+// Prefix table
+  const prefixTable = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'prefix';").get();
+  if (!prefixTable['count(*)']) {
+    sql.prepare("CREATE TABLE prefix (serverprefix TEXT, guild TEXT PRIMARY KEY);").run();
+  }
+
     console.log(`Logged in as ${client.user.username}`)
 });
 
@@ -48,7 +53,18 @@ client.on("message", (message) => {
     if (message.author.bot) return;
     if (!message.guild) return;
 
-    const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(config.prefix)})\\s*`);
+    const currentPrefix = sql.prepare("SELECT * FROM prefix WHERE guild = ?").get(message.guild.id);
+    const Prefix = config.prefix;
+    var getPrefix;
+    if(!currentPrefix) {
+      sql.prepare("INSERT OR REPLACE INTO prefix (serverprefix, guild) VALUES (?,?);").run(Prefix, message.guild.id)
+      getPrefix = Prefix;
+    } else {
+      getPrefix = currentPrefix.serverprefix;
+    }
+
+  const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(getPrefix)})\\s*`);
   if (!prefixRegex.test(message.content)) return;
 
   const [, matchedPrefix] = message.content.match(prefixRegex);
@@ -76,7 +92,7 @@ client.on("message", (message) => {
     if (now < expirationTime) {
       const timeLeft = (expirationTime - now) / 1000;
       return message.reply(
-        `please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`
+        `Please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`
       );
     }
   }

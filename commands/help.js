@@ -23,6 +23,9 @@ const prefix = config.prefix
       .addFields(
         { name: `Leveling Command`, value: `\`${prefix}rank\`, \`${prefix}leaderboard\`, \`${prefix}role-level\`, \`${prefix}add-level\``},
       )
+      .addFields(
+        { name: `Configuration Command`, value: `\`${prefix}set-prefix\``},
+      )
       .setTimestamp()
       .setFooter('<> is mandatory, [] is optional');
 
