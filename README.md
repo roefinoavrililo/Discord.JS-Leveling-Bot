@@ -74,8 +74,8 @@ You need to rename `config.json.example` file to `config.json` and after you don
 `-rlevel show`
 
 ## TO DO
-▶️ Voice Leveling
-▶️ Custom Rank Card
+> ▶️ Voice Leveling
+> ▶️ Custom Rank Card
 
 ## Contributing
 
