@@ -9,8 +9,14 @@
 ## Requirements
 1. Your Discord Bot Token **[Guide Here](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot)**
 2. Node.js v12.0.0 or newer
-3. Packages you need to install: Discord.JS, better-sqlite3, canvas, fs.
+3. Packages you need to install: Discord.JS, better-sqlite3, canvas or canvacord, fs.
 4. DB Browser (SQLite) *optional
+
+## Different Rank Card
+There are two different type of rank card that you can use, "rank.js.canvacord" uses canvacord ![logo](https://media.discordapp.net/attachments/740789315407183872/863914086642483210/RankCard.png) 
+or "rank.js.canvas" uses normal canvas ![logo](https://media.discordapp.net/attachments/740789315407183872/863914700319358986/rank.png)
+**YOU CAN ONLY CHOOSE ONE OF THE FILE!!!**
+Remove .canvacord or .canvas if you want to choose which card you think better.
 
 ## IMPORTANT NOTE
 You cannot host this bot on Heroku since Heroku cannot write files such as sqlite files. You can host your bot on Something.Host, Make sure you have join [This Server](https://discord.gg/hosting) for free hosting services.
