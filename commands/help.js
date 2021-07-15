@@ -21,7 +21,7 @@ const prefix = config.prefix
       .setColor("RANDOM")
       .setAuthor(`${message.guild.name} Help Menu`)
       .addFields(
-        { name: `Leveling Command`, value: `\`${prefix}rank\`, \`${prefix}leaderboard\`, \`${prefix}role-level\`, \`${prefix}add-level\``},
+        { name: `Leveling Command`, value: `\`${prefix}rank\`, \`${prefix}leaderboard\`, \`${prefix}role-level\`, \`${prefix}add-level\`, \`${prefix}blacklist\``},
       )
       .addFields(
         { name: `Configuration Command`, value: `\`${prefix}set-prefix\``},
