@@ -1,6 +1,7 @@
 # Discord JS Leveling System Bot
 > A Discord Leveling Bot built with Discord.js and Canvas made by roefinoavrililo
-> The Most Complete Discord Leveling Bot Open Source!
+## The Most Complete Discord Leveling Bot Open Source!
+> Role level, set and add, rank card, more! Easy to use and free!
 
 ## Support Me!
 1. Invite my bot to your server by using this [Link](https://bit.ly/sarahbot)
