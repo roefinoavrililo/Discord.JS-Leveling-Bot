@@ -18,25 +18,31 @@ const config = require("./config.json")
 client.login(config.token) 
 
 client.on("ready", () => {
-// Check if the table "points" exists.
-  const levelTable = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'levels';").get();
-  if (!levelTable['count(*)']) {
-    sql.prepare("CREATE TABLE levels (id TEXT PRIMARY KEY, user TEXT, guild TEXT, xp INTEGER, level INTEGER, totalXP INTEGER);").run();
-  }
+  // Check if the table "points" exists.
+    const levelTable = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'levels';").get();
+    if (!levelTable['count(*)']) {
+      sql.prepare("CREATE TABLE levels (id TEXT PRIMARY KEY, user TEXT, guild TEXT, xp INTEGER, level INTEGER, totalXP INTEGER);").run();
+    }
 
-  client.getLevel = sql.prepare("SELECT * FROM levels WHERE user = ? AND guild = ?");
-  client.setLevel = sql.prepare("INSERT OR REPLACE INTO levels (id, user, guild, xp, level, totalXP) VALUES (@id, @user, @guild, @xp, @level, @totalXP);");
-// Role table for levels
-  const roleTable = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'roles';").get();
-  if (!roleTable['count(*)']) {
-    sql.prepare("CREATE TABLE roles (guildID TEXT, roleID TEXT, level INTEGER);").run();
-  }
+    client.getLevel = sql.prepare("SELECT * FROM levels WHERE user = ? AND guild = ?");
+    client.setLevel = sql.prepare("INSERT OR REPLACE INTO levels (id, user, guild, xp, level, totalXP) VALUES (@id, @user, @guild, @xp, @level, @totalXP);");
+  // Role table for levels
+    const roleTable = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'roles';").get();
+    if (!roleTable['count(*)']) {
+      sql.prepare("CREATE TABLE roles (guildID TEXT, roleID TEXT, level INTEGER);").run();
+    }
 
-// Prefix table
-  const prefixTable = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'prefix';").get();
-  if (!prefixTable['count(*)']) {
-    sql.prepare("CREATE TABLE prefix (serverprefix TEXT, guild TEXT PRIMARY KEY);").run();
-  }
+  // Prefix table
+    const prefixTable = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'prefix';").get();
+    if (!prefixTable['count(*)']) {
+      sql.prepare("CREATE TABLE prefix (serverprefix TEXT, guild TEXT PRIMARY KEY);").run();
+    }
+
+  // Blacklist table
+    const blacklistTable = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'blacklistTable';").get();
+    if (!blacklistTable['count(*)']) {
+      sql.prepare("CREATE TABLE blacklistTable (guild TEXT, typeId TEXT, type TEXT, id TEXT PRIMARY KEY);").run();
+    }
 
     console.log(`Logged in as ${client.user.username}`)
 });
@@ -112,6 +118,9 @@ client.on("message", (message) => {
 client.on("message", message => {
   if (message.author.bot) return;
   if (!message.guild) return;
+  let blacklist = sql.prepare(`SELECT id FROM blacklistTable WHERE id = ?`);
+  if(blacklist.get(`${message.guild.id}-${message.author.id}`) || blacklist.get(`${message.guild.id}-${message.channel.id}`)) return;
+
         // get level and set level
         const level = client.getLevel.get(message.author.id, message.guild.id) 
         if(!level) {

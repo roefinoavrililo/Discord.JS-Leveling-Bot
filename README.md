@@ -79,6 +79,9 @@ You need to rename `config.json.example` file to `config.json` and after you don
 * Show role level
 `-rlevel show`
 
+> AND MORE...
+
+
 ## TO DO
 > ▶️ Voice Leveling
 > ▶️ Custom Rank Card

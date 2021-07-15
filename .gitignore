@@ -1,3 +1,4 @@
 config.json
 mainDB.sqlite
 node_modules/
+commands/rank.js

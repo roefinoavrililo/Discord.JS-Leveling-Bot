@@ -21,7 +21,7 @@ module.exports = {
         client.getScore = sql.prepare("SELECT * FROM levels WHERE user = ? AND guild = ?");
         client.setScore = sql.prepare("INSERT OR REPLACE INTO levels (id, user, guild, xp, level, totalXP) VALUES (@id, @user, @guild, @xp, @level, @totalXP);");
         if(!user) {
-            return message.reply(`Please mention a user!`)
+            return message.reply(`Please mention an user!`)
         } else {
             if(isNaN(levelArgs) || levelArgs < 1) {
                 return message.reply(`Please provide a valid number!`)

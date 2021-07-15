@@ -1,3 +1,6 @@
+## CHANGELOG 3.0
+> Added Blacklist Channel/User command
+
 ## CHANGELOG 2.0
 > Added Canvacord Rank Card
 
