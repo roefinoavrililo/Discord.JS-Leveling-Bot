@@ -1,5 +1,6 @@
 ## CHANGELOG 3.0
 > Added Blacklist Channel/User command
+> Added Level Up Message (Custom)
 
 ## CHANGELOG 2.0
 > Added Canvacord Rank Card

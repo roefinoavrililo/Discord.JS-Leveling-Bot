@@ -44,6 +44,14 @@ client.on("ready", () => {
       sql.prepare("CREATE TABLE blacklistTable (guild TEXT, typeId TEXT, type TEXT, id TEXT PRIMARY KEY);").run();
     }
 
+  // Settings table
+    const settingsTable = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'settings';").get();
+    if (!settingsTable['count(*)']) {
+    sql.prepare("CREATE TABLE settings (guild TEXT PRIMARY KEY, levelUpMessage TEXT, customXP INTEGER, customCooldown INTEGER);").run();
+    }
+
+  // CUSTOM XP AND CUSTOM COOLDOWN COMING LATER
+
     console.log(`Logged in as ${client.user.username}`)
 });
 
@@ -128,6 +136,8 @@ client.on("message", message => {
           insertLevel.run(`${message.author.id}-${message.guild.id}`, message.author.id, message.guild.id, 0, 0, 0)
           return;
         }
+
+        let levelUpMsg = sql.prepare("SELECT * FROM settings WHERE guild = ?").get(message.guild.id);
       
         const lvl = level.level;
 
@@ -148,10 +158,22 @@ client.on("message", message => {
                 level.level += 1;
         let embed = new Discord.MessageEmbed()
               .setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-              .setDescription(`**Congratulations** ${message.author}! You have now leveled up to **level ${level.level}**`)
               .setColor("RANDOM")
               .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
               .setTimestamp();
+
+              if(!levelUpMsg)
+              {
+                embed.setDescription(`**Congratulations** ${message.author}! You have now leveled up to **level ${level.level}**`);
+              } else {
+                function antonymsLevelUp(string) {
+                  return string
+                    .replace(/{member}/i, `${message.member}`)
+                    .replace(/{xp}/i, `${level.xp}`)
+                    .replace(/{level}/i, `${level.level}`)
+                }
+                embed.setDescription(antonymsLevelUp(levelUpMsg.levelUpMessage.toString()));
+              }
         // using try catch if bot have perms to send EMBED_LINKS      
         try {
         message.channel.send(embed);
