@@ -72,9 +72,9 @@ client.on("message", (message) => {
     var getPrefix;
     if(!currentPrefix) {
       sql.prepare("INSERT OR REPLACE INTO prefix (serverprefix, guild) VALUES (?,?);").run(Prefix, message.guild.id)
-      getPrefix = Prefix;
+      getPrefix = Prefix.toString();
     } else {
-      getPrefix = currentPrefix.serverprefix;
+      getPrefix = currentPrefix.serverprefix.toString();
     }
 
   const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -137,12 +137,24 @@ client.on("message", message => {
           return;
         }
 
-        let levelUpMsg = sql.prepare("SELECT * FROM settings WHERE guild = ?").get(message.guild.id);
-      
+        let customSettings = sql.prepare("SELECT * FROM settings WHERE guild = ?").get(message.guild.id);
+
         const lvl = level.level;
 
+        let getXpfromDB;
+        let getCooldownfromDB;
+
+        if(!customSettings)
+        {
+          getXpfromDB = 16; // Default
+          getCooldownfromDB = 1000;
+        } else {
+          getXpfromDB = customSettings.customXP;
+          getCooldownfromDB = customSettings.customCooldown;
+        }
+
       // xp system
-        const generatedXp = Math.floor(Math.random() * 16);
+        const generatedXp = Math.floor(Math.random() * getXpfromDB);
         const nextXP = level.level * 2 * 250 + 250
         // message content or characters length has to be more than 4 characters also cooldown
       if(talkedRecently.get(message.author.id)) {
@@ -162,7 +174,7 @@ client.on("message", message => {
               .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
               .setTimestamp();
 
-              if(!levelUpMsg)
+              if(!customSettings)
               {
                 embed.setDescription(`**Congratulations** ${message.author}! You have now leveled up to **level ${level.level}**`);
               } else {
@@ -172,7 +184,7 @@ client.on("message", message => {
                     .replace(/{xp}/i, `${level.xp}`)
                     .replace(/{level}/i, `${level.level}`)
                 }
-                embed.setDescription(antonymsLevelUp(levelUpMsg.levelUpMessage.toString()));
+                embed.setDescription(antonymsLevelUp(customSettings.levelUpMessage.toString()));
               }
         // using try catch if bot have perms to send EMBED_LINKS      
         try {
@@ -183,8 +195,8 @@ client.on("message", message => {
       };
       client.setLevel.run(level);
       // add cooldown to user
-  talkedRecently.set(message.author.id, Date.now() + 10 * 1000);
-  setTimeout(() => talkedRecently.delete(message.author.id, Date.now() + 10 * 1000))    
+    talkedRecently.set(message.author.id, Date.now() + getCooldownfromDB);
+    setTimeout(() => talkedRecently.delete(message.author.id, Date.now() + getCooldownfromDB))    
       }
             // level up, time to add level roles
             const member = message.member;
