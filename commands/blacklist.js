@@ -15,9 +15,16 @@ module.exports = {
         let ifExists = sql.prepare(`SELECT id FROM blacklistTable WHERE id = ?`);
 
         if(!args.length) 
-            return message.reply(`Require arguments: \`User\` or \`Channel\``);
-        
-        if(args[0].toLowerCase() == "user")
+            return message.reply(`Require arguments: \`User\` or \`Channel\` or \`List\``);
+
+        if(args[0].toLowerCase() == "list")
+        {
+            const currentPage = parseInt(args[1]) || 1;
+            const Lists = sql.prepare("SELECT * FROM blacklistTable WHERE guild = ?").all(message.guild.id);
+            if(parseFloat(args[0])  > Math.ceil(Lists.length / 10)) {
+            return message.reply(`Invalid page number! There are only ${Math.ceil(Lists.length / 10)} pages`)
+            }
+        } else if(args[0].toLowerCase() == "user")
         {
             let user = message.mentions.members.first() || message.guild.members.cache.get(args[1]) || message.guild.members.cache.find(x => x.user.username.toLowerCase() === args.slice(1).join(" ") ||x.user.username === args[1])
             if(!args[1])
@@ -59,7 +66,7 @@ module.exports = {
                     sql.prepare("INSERT OR REPLACE INTO blacklistTable (guild, typeId, type, id) VALUES (?, ?, ?, ?);").run(message.guild.id, channel.id, "Channel", `${message.guild.id}-${channel.id}`);
                     return message.reply(`Channel ${channel} has been blacklisted!`);
         } else {
-            return message.reply(`Require arguments: \`User\` or \`Channel\``);
+            return message.reply(`Require arguments: \`User\` or \`Channel\` or \`List\``);
         }
     }
 }

@@ -49,8 +49,18 @@ client.on("ready", () => {
     if (!settingsTable['count(*)']) {
     sql.prepare("CREATE TABLE settings (guild TEXT PRIMARY KEY, levelUpMessage TEXT, customXP INTEGER, customCooldown INTEGER);").run();
     }
+    
+    const channelTable = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'channel';").get();
+    if (!channelTable['count(*)']) {
+    sql.prepare("CREATE TABLE channel (guild TEXT PRIMARY KEY, channel TEXT);").run();
+    }
 
-  // CUSTOM XP AND CUSTOM COOLDOWN COMING LATER
+
+  // RankCard table (WORK IN PROGRESS, STILL IN THE WORKS)
+    // const rankCardTable = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'rankCardTable';").get();
+    // if (!rankCardTable['count(*)']) {
+    // sql.prepare("CREATE TABLE rankCardTable (id TEXT PRIMARY KEY, user TEXT, guild TEXT, image BLOB, fontColor TEXT, barColor TEXT, overlay TEXT);").run();
+    // }
 
     console.log(`Logged in as ${client.user.username}`)
 });
@@ -138,6 +148,7 @@ client.on("message", message => {
         }
 
         let customSettings = sql.prepare("SELECT * FROM settings WHERE guild = ?").get(message.guild.id);
+        let channelLevel = sql.prepare("SELECT * FROM channel WHERE guild = ?").get(message.guild.id);
 
         const lvl = level.level;
 
@@ -168,6 +179,8 @@ client.on("message", message => {
         if(level.xp >= nextXP) {
                 level.xp = 0;
                 level.level += 1;
+
+        let levelUpMsg;
         let embed = new Discord.MessageEmbed()
               .setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
               .setColor("RANDOM")
@@ -177,6 +190,7 @@ client.on("message", message => {
               if(!customSettings)
               {
                 embed.setDescription(`**Congratulations** ${message.author}! You have now leveled up to **level ${level.level}**`);
+                levelUpMsg = `**Congratulations** ${message.author}! You have now leveled up to **level ${level.level}**`;
               } else {
                 function antonymsLevelUp(string) {
                   return string
@@ -185,12 +199,29 @@ client.on("message", message => {
                     .replace(/{level}/i, `${level.level}`)
                 }
                 embed.setDescription(antonymsLevelUp(customSettings.levelUpMessage.toString()));
+                levelUpMsg = antonymsLevelUp(customSettings.levelUpMessage.toString());
               }
         // using try catch if bot have perms to send EMBED_LINKS      
         try {
-        message.channel.send(embed);
+          if(!channelLevel || channelLevel.channel == "Default")
+          {
+            message.channel.send(embed);
+          } else {
+            let channel = message.guild.channels.cache.get(channelLevel.channel)
+            const permissionFlags = channel.permissionsFor(message.guild.me);
+            if(!permissionFlags.has("SEND_MESSAGES") || !permissionFlags.has("VIEW_CHANNEL")) return;
+            channel.send(embed);
+          }
         } catch (err) {
-          message.channel.send(`Congratulations, ${message.author}! You have now leveled up to **Level ${level.level}**`)
+          if(!channelLevel || channelLevel.channel == "Default")
+          {
+            message.channel.send(levelUpMsg);
+          } else {
+            let channel = message.guild.channels.cache.get(channelLevel.channel)
+            const permissionFlags = channel.permissionsFor(message.guild.me);
+            if(!permissionFlags.has("SEND_MESSAGES") || !permissionFlags.has("VIEW_CHANNEL")) return;
+            channel.send(levelUpMsg);
+          }
         }
       };
       client.setLevel.run(level);

@@ -1,6 +1,6 @@
 ## CHANGELOG 3.0
 > Added Blacklist Channel/User command
-> Added Level Up Message (Custom)
+> Added Level Up Message (Custom) with Channel
 > Added Customizable XP
 > Error (str.replace is not a function) fix
 
