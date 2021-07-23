@@ -8,6 +8,9 @@
 2. Join my server [here](https://bit.ly/DTserver)
 3. Support me on Patreon [here!](https://www.patreon.com/roefino?fan_landing=true)
 
+## Tutorial
+Tutorial can be found in `TUTORIAL.md` file.
+
 ## Requirements
 1. Your Discord Bot Token **[Guide Here](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot)**
 2. Node.js v12.0.0 or newer
