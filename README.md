@@ -3,6 +3,9 @@
 ## The Most Complete Discord Leveling Bot Open Source!
 > Role level, set and add, rank card, more! Easy to use and free!
 
+## IMPORTANT:
+**This code is for people to learn the basics of how to use better-sqlite3, canvas, canvacord, and discord.js. You can use my code for your bot for free. If you see a normal problem like "npm errors can't install" and stuff, please google it first, so you can learn how to fix errors and mistake by yourself. if you see an actual errors like "xp not adding up", "user can't level up", "image error" you can go ahead and ask me in my Discord Server.**
+
 ## Support Me!
 1. Invite my bot to your server by using this [Link](https://bit.ly/sarahbot)
 2. Join my server [here](https://bit.ly/DTserver)
