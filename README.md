@@ -7,6 +7,9 @@
 **This code is for people to learn the basics of how to use better-sqlite3, canvas, canvacord, and discord.js. You can use my code for your bot for free. If you see a normal problem like "npm errors can't install" and stuff, please google it first, so you can learn how to fix errors and mistake by yourself. if you see an actual errors like "xp not adding up", "user can't level up", "image error" you can go ahead and ask me in my Discord Server.**
 **IF YOU REALLY WANT TO USE THIS BOT FOR YOUR SERVER, BUT IT CAN'T GO ONLINE 24/7, THERE IS A TUTORIAL OF HOW TO HOST IT FOR FREE IN TUTORIAL.MD FILE, REMEMBER THAT REPL.IT DOES NOT SUPPORT BETTER-SQLITE3**
 
+## UPDATES:
+**Hey, I'm currently taking a break right now from programming after working on a game https://roefino.itch.io/couch-tap (check it out btw its free you can try it now!!) thanks for supporting me and this repository! I can't wait to get back to work!**
+
 ## Support Me!
 1. Invite my bot to your server by using this [Link](https://bit.ly/sarahbot)
 2. Join my server [here](https://bit.ly/DTserver)
