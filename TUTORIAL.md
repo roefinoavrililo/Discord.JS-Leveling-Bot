@@ -43,7 +43,8 @@ I've been using [Something.Host](https://something.host/en/) for 8 months, and i
 If you don't have money to host, well [DanBot Hosting](discord.gg/dbh) is for you! It's easy to use, but every free stuff comes with risks. Well DanBot Hosting is pretty slow and server always goes offline randomly, but it's a great start.
 
 ## Which Hosting Services you shouldn't use.
-[Heroku](https://www.heroku.com/) is honestly not good for hosting your bot, It's not because your bot will run slow or lag, You will not be able to write data in your Database with Heroku.
+- [Heroku](https://www.heroku.com/) is honestly not good for hosting your bot, your bot will run slow or having lag issues, You will not be able to write data in your Database with Heroku.
+- You are also not supposed to use repl.it. I believe that repl.it does not support better-sqlite3.
 
 
 # Closing
