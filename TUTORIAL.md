@@ -36,6 +36,8 @@ On your Console/Terminal, run `node index.js` or `node .` to run the bot! But yo
 
 # Hosting Services
 
+REMINDER: ALL OF THIS MIGHT BE OUTDATED AND IM TOO LAZY TO UPDATE IT LOL :P
+
 ## Something.Host
 I've been using [Something.Host](https://something.host/en/) for 8 months, and it's great. Easy to use, and extremely cheap, with the lowest price at 1.49 € / month!
 
