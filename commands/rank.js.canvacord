@@ -32,15 +32,25 @@ module.exports = {
         let ranking = rank.map(x => x.totalXP).indexOf(totalXP) + 1
         if(!message.guild.me.hasPermission("ATTACH_FILES")) return message.reply(`**Missing Permission**: ATTACH_FILES or MESSAGE ATTACHMENTS`);
  
+        let getCard = sql.prepare("SELECT * FROM rankCardTable WHERE user = ? AND guild = ?");
+        if (!getCard.get(user.id, message.guild.id))
+        {            
+          sql.prepare("INSERT OR REPLACE INTO rankCardTable (id, user, guild, textColor, barColor, backgroundColor) VALUES (?, ?, ?, ?, ?, ?);").run(`${user.id}-${message.guild.id}`, user.id, message.guild.id, "#beb1b1", "#838383", "#36393f");
+        }
+      
+        let card = getCard.get(user.id, message.guild.id);
     const rankCard = new canvacord.Rank()
         .setAvatar(user.user.displayAvatarURL({ format: "jpg" }))
-        .setCurrentXP(xpInfo)
-        .setRequiredXP(nextXP)
-        .setProgressBar("#FFFFFF", "COLOR")
-        .setUsername(user.user.username)
-        .setDiscriminator(user.user.discriminator)
+        .setBackground("COLOR", card.backgroundColor)
+        .setCurrentXP(xpInfo, card.textColor)
+        .setRequiredXP(nextXP, card.textColor)
+        .setProgressBar(card.barColor, "COLOR")
+        .setUsername(user.user.username, card.textColor)
+        .setDiscriminator(user.user.discriminator, card.textColor)
         .setRank(ranking)
-        .setLevel(levelInfo);
+        .setRankColor(card.textColor, card.textColor)
+        .setLevel(levelInfo)
+        .setLevelColor(card.textColor, card.textColor);
     
         rankCard.build()
     .then(data => {
