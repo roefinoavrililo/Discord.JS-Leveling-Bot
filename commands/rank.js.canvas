@@ -23,6 +23,15 @@ module.exports = {
  if (!score) {
   return message.reply(`This user does not have an xp yet!`)
  }
+
+        let card = sql.prepare("SELECT * FROM rankCardTable WHERE user = ? AND guild = ?");
+  if (!card.get(user.id, message.guild.id))
+  {            
+    sql.prepare("INSERT OR REPLACE INTO rankCardTable (id, user, guild, textColor, barColor, backgroundColor) VALUES (?, ?, ?, ?, ?, ?);").run(`${user.id}-${message.guild.id}`, user.id, message.guild.id, "#beb1b1", "#838383", "#36393f");
+  }
+
+  let rankCard = card.get(user.id, message.guild.id);
+
 const levelInfo = score.level
 const nextXP = levelInfo * 2 * 250 + 250
 const xpInfo = score.xp;
@@ -36,7 +45,10 @@ if(!message.guild.me.hasPermission("ATTACH_FILES")) return message.reply(`**Miss
 const canvas = createCanvas(1000, 333)
     const ctx = canvas.getContext("2d");
     const background = await loadImage(join(__dirname, "..", "img", "wallpaper.png"));
+    ctx.fillStyle = rankCard.backgroundColor
+    ctx.fillRect(0,0,canvas.width,canvas.height)
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
 
     ctx.beginPath();
     ctx.lineWidth = 4;
@@ -49,7 +61,7 @@ const canvas = createCanvas(1000, 333)
     ctx.strokeRect(180, 216, 775, 65);
     ctx.stroke();
 
-    ctx.fillStyle = "#838383";
+    ctx.fillStyle = rankCard.barColor;
     ctx.globalAlpha = 0.6;
     ctx.fillRect(200, 216, ((100 / (score.level * 2 * 250 + 250)) * score.xp) * 7.5, 65);
     ctx.fill();
@@ -57,7 +69,7 @@ const canvas = createCanvas(1000, 333)
 
     ctx.font = '30px sans-serif';
     ctx.textAlign = "center";
-    ctx.fillStyle = "#beb1b1";
+    ctx.fillStyle = rankCard.textColor;
     ctx.fillText(`${xpInfo} / ${nextXP} XP`, 600, 260);
 
    ctx.font = '35px sans-serif';
@@ -74,7 +86,7 @@ const canvas = createCanvas(1000, 333)
 
     ctx.arc(170, 160, 120, 0, Math.PI * 2, true);
     ctx.lineWidth = 6;
-    ctx.strokeStyle = "#A3A3A3"
+    ctx.strokeStyle = "WHITE"
     ctx.stroke();
     ctx.closePath();
     ctx.clip();

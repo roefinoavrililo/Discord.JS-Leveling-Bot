@@ -57,10 +57,10 @@ client.on("ready", () => {
 
 
   // RankCard table (WORK IN PROGRESS, STILL IN THE WORKS)
-    // const rankCardTable = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'rankCardTable';").get();
-    // if (!rankCardTable['count(*)']) {
-    // sql.prepare("CREATE TABLE rankCardTable (id TEXT PRIMARY KEY, user TEXT, guild TEXT, image BLOB, fontColor TEXT, barColor TEXT, overlay TEXT);").run();
-    // }
+    const rankCardTable = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'rankCardTable';").get();
+    if (!rankCardTable['count(*)']) {
+    sql.prepare("CREATE TABLE rankCardTable (id TEXT PRIMARY KEY, user TEXT, guild TEXT, textColor TEXT, barColor TEXT, backgroundColor TEXT);").run();
+    }
 
     console.log(`Logged in as ${client.user.username}`)
 });
@@ -76,6 +76,13 @@ for (const file of commandFiles) {
 client.on("message", (message) => {
     if (message.author.bot) return;
     if (!message.guild) return;
+
+    
+    let card = sql.prepare("SELECT * FROM rankCardTable WHERE user = ? AND guild = ?");
+    if (!card.get(message.author.id, message.guild.id))
+    {            
+    sql.prepare("INSERT OR REPLACE INTO rankCardTable (id, user, guild, textColor, barColor, backgroundColor) VALUES (?, ?, ?, ?, ?, ?);").run(`${message.author.id}-${message.guild.id}`, message.author.id, message.guild.id, "#beb1b1", "#838383", "#36393f");
+    }
 
     const currentPrefix = sql.prepare("SELECT * FROM prefix WHERE guild = ?").get(message.guild.id);
     const Prefix = config.prefix;
